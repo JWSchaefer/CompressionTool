@@ -39,7 +39,7 @@ fn main() -> std::io::Result<()>{
     }
 
     let elapsed = now.elapsed();
-    println!("\nTime to read + encode + write:\t{:.2?}", elapsed / its);
+    println!("{}\t- {:.2?}", &args.input.file_name().unwrap().to_str().unwrap(), elapsed / its);
 
     Ok(())
 }
