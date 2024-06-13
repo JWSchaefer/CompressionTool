@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cargo run --release -- -i external/les_mis.txt -o test.huff

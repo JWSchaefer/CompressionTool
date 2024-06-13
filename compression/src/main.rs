@@ -1,39 +1,45 @@
+// #![allow(warnings)] 
+#![allow(unused)]
+
 mod huffman;
 
 use std::fs;
-use clap::Parser;
 use std::time::Instant;
+use std::path::PathBuf;
 
-use huffman::tree::Tree;
+use clap::Parser;
 
-/// Search for a pattern in a file and display the lines that contain it.
-#[derive(Parser, Debug)]
+use huffman::encoder::encoder::Encoder;
+
+
+#[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
-    /// The path to the file to read
-    path: std::path::PathBuf,
+        /// Input file path
+        #[arg(short, long)]
+        input : PathBuf,
+    
+        /// Output file path
+        #[arg(short, long)]
+        output : PathBuf,
 }
 
-fn main() {
+
+fn main() -> std::io::Result<()>{
 
     let args = Cli::parse();
-
-    let data = fs::read_to_string(args.path).unwrap_or(String::from("None"));
-
-    let mut count = 0u32;
-
     let now = Instant::now();
-    while count < 10_000 {
-        {
-            let tree : Tree = Tree::new(&data);
-        }
-        count += 1
+
+    let its : u32 = 100;
+    for _ in 0..its {
+        let data    = fs::read_to_string(&args.input)?;
+        let encoder = Encoder::new(&data);
+        let buffer  = encoder.encode(&data);
+        let _file   = fs::write(&args.output, buffer.get_data())?;
     }
 
-    let elapsed = now.elapsed() ;
+    let elapsed = now.elapsed();
+    println!("\nTime to read + encode + write:\t{:.2?}", elapsed / its);
 
-    println!("Elapsed per iter:\t{:.2?}", elapsed/ 10_000);
-    
-
-
+    Ok(())
 }
