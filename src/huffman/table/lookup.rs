@@ -12,12 +12,20 @@ impl<T: Copy> Lookup<T> {
         }
     }
 
-    pub fn lookup(&self, index : &char) -> T {
-        self.data[*index as usize]
+    pub fn lookup(&self, char : &char) -> T {
+        self.data[*char as usize]
     }
 
-    pub fn set(&mut self, index : &char, value : &T) {
-        self.data[*index as usize] = *value
+    pub fn lookup_index(&self, index : &usize) -> T {
+        self.data[*index]
     }
+
+    pub fn set(&mut self, char : &char, value : &T) {
+        self.data[*char as usize] = *value
+    }
+
+    // pub fn set_index(&mut self, index : &usize, value : &T) {
+    //     self.data[*index] = *value
+    // }
 
 }

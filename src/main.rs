@@ -4,12 +4,13 @@
 mod huffman;
 
 use std::fs;
+use std::io::Result;
 use std::time::Instant;
 use std::path::PathBuf;
 
 use clap::Parser;
 
-use huffman::encoder::encoder::Encoder;
+use crate::huffman::huffman::huffman::Huffman;
 
 
 #[derive(Parser)]
@@ -24,22 +25,56 @@ struct Cli {
         output : PathBuf,
 }
 
-
-fn main() -> std::io::Result<()>{
-
-    let args = Cli::parse();
-    let now = Instant::now();
+pub fn check_encode_speed(in_path : &PathBuf, out_path : &PathBuf) -> Result<()> {
 
     let its : u32 = 100;
+    let now = Instant::now();
+
     for _ in 0..its {
-        let data    = fs::read_to_string(&args.input)?;
-        let encoder = Encoder::new(&data);
-        let buffer  = encoder.encode(&data);
-        let _file   = fs::write(&args.output, buffer.get_data())?;
+
+        let data    = fs::read_to_string(in_path)?;
+        let huf     = Huffman::from_string(&data);
+        let buffer  = huf.encode(&data);
+
+        fs::write(&out_path, buffer)?;
     }
 
     let elapsed = now.elapsed();
-    println!("{}\t- {:.2?}", &args.input.file_name().unwrap().to_str().unwrap(), elapsed / its);
+    println!(
+        "{}\t- {:.2?}", 
+        &in_path.file_name().unwrap().to_str().unwrap(), 
+        elapsed / its
+    );
 
+    Ok(())
+}
+
+fn encode(in_path : &PathBuf, out_path : &PathBuf) -> Result<()> {
+
+    let data    = fs::read_to_string(in_path)?;
+    let huf     = Huffman::from_string(&data);
+    let buffer  = huf.encode(&data);
+
+    fs::write(&out_path, buffer.get_data())?;
+    
+    Ok(())
+}
+
+fn decode(in_path : &PathBuf) -> Result<()>{
+    let data = fs::read(in_path)?;
+
+    let decoder = Huffman::from_raw(&data);
+
+    Ok(())
+}
+
+
+fn main() -> Result<()>{
+
+    let args = Cli::parse();
+    encode(&args.input, &args.output)?;
+    decode(&args.output)?;
+    // check_encode_speed(&args.input, &args.output)?;
+    
     Ok(())
 }

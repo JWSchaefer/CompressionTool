@@ -17,6 +17,12 @@ pub struct Encoding{
     raw : u32
 }
 
+impl Encoding {
+    pub fn from_u32(raw : u32) -> Self{
+        Self {raw}
+    }
+}
+
 impl HuffEncoding for Encoding {
 
     fn new() -> Self {

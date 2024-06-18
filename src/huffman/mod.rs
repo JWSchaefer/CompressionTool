@@ -12,8 +12,10 @@ mod table {
     pub mod lookup;
     pub mod encoding;
 }
-pub mod encoder{
-    pub mod encoder;
-    pub mod buffer;
-    mod constant;
+
+pub mod huffman {
+    pub mod huffman;
+    pub mod bitstream;
+    pub mod constant;
 }
+

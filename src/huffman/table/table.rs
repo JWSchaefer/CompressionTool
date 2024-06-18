@@ -1,8 +1,9 @@
-use super::lookup::Lookup;
 use super::weight::Weight;
-use super::super::table::encoding::Encoding;
+use super::encoding::Encoding;
+use super::lookup::Lookup;
+use super::super::huffman::constant::SPACER;
 
-
+use std::iter::zip;
 pub struct Table{
     pub weights  : Lookup<Weight>,
     pub encodings : Lookup<Encoding>,
@@ -15,4 +16,5 @@ impl Table {
             encodings
         }
     }
+
 }

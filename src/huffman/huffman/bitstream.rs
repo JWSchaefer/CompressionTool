@@ -1,30 +1,36 @@
-pub struct Buffer {
+pub struct Bitstream {
     data : Vec::<u8>,
     head : usize
 }
 
-impl Buffer {
+impl Bitstream {
     
     pub fn new(mut data : Vec<u8>) -> Self {
         data.push(0);
         Self { data : data, head : 7}
     }
 
-    // pub fn push(&mut self, byte : u8){
+    pub fn get_data(& self) -> &Vec<u8> {
+        &self.data
+    }
 
-    //     let len = self.data.len() - 1;
+    pub fn get_head(&self) -> usize {
+        self.head
+    }
 
-    //     if self.data[len] == 0 && self.head == 7 {
-    //         self.data[len] = byte
-    //     } else {
-    //         self.data.push( byte );
-    //     }
+    pub fn set_head(&mut self, head : usize) {
+        self.head = head
+    }
 
-    //     self.data.push( 0 );
-    //     self.head = 7;
-    // }
+    pub fn read(&self, n_bits : usize){
 
-    pub fn write(&mut self, encoding : &mut u32 ) {
+    }
+
+    pub fn take(&mut self, n_bits : usize){
+
+    }
+
+    pub fn put(&mut self, encoding : &mut u32 ) {
 
         // Determine how far to shift the encoding
         let font : u32 = encoding.leading_zeros() + 1;
@@ -35,7 +41,7 @@ impl Buffer {
         // This is fixable but is not woth the effort right now
         if diff > font {
             panic!(
-            "Encoding cannot be coerced into the buffer without information loss"
+            "Encoding cannot be coerced into the stream without information loss"
             )
         }
 
@@ -46,7 +52,7 @@ impl Buffer {
         // Split the encoding into u8 bytes
         let bytes = encoding.to_le_bytes();
 
-        // Start from the little end and count bytes to ignore
+        // Start from the little end and count empty bytes
         let mut index : usize = 3;
         for (i, byte) in bytes.iter().enumerate().rev() {
             match (i == 0, *byte == 0) {
@@ -73,9 +79,7 @@ impl Buffer {
 
     }
 
-    pub fn get_data(& self) -> &Vec<u8> {
-        &self.data
-    }
+    
 
 
 }
