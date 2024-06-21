@@ -1,19 +1,17 @@
-use crate::huffman::table::encoding;
+use std::iter::zip;
+use std::collections::HashMap;
 
+use crate::huffman;
 
-use super::constant::{END_CHAR, SIGNATURE, SPACER, VERSION};
-
-use super::super::bitstream::decode_stream::DecodeStream;
-use super::super::bitstream::encode_stream::EncodeStream;
 use super::super::table::table::Table;
-use super::super::table::lookup::{Lookup, MAX_CHAR, Indexable};
 use super::super::table::weight::Weight;
 use super::super::tree::tree::BinaryTree;
+use super::super::bitstream::decode_stream::DecodeStream;
+use super::super::bitstream::encode_stream::EncodeStream;
 use super::super::table::encoding::{Encoding, HuffEncoding};
+use super::super::table::lookup::{Lookup, MAX_CHAR, Indexable};
 
-use std::collections::HashMap;
-use std::iter::zip;
-
+use super::constant::{END_CHAR, SIGNATURE, SPACER, VERSION};
 
 pub struct Huffman {
     table : Table,
@@ -22,7 +20,7 @@ pub struct Huffman {
 
 impl Huffman {
 
-    pub fn from_string(data : &String) -> Self {
+    pub fn train(data : &String) -> Self {
 
         let mut weights = Lookup::<Weight>::new(0);
 
@@ -43,87 +41,11 @@ impl Huffman {
         Self { table, tree }
     }
 
-    pub fn decode(data : &Vec<u8>) -> Result<String, &str> {
 
-        let mut head = 0;
 
-        // File Signature
-        let sig = &data[head..SIGNATURE.len()];
+    pub fn encode(data : &mut String) -> Vec<u8> {
 
-        if !zip(SIGNATURE, sig).all(|(a,b)| a == b) {
-            return Err("Invalid File Signature");
-        } 
-
-        head += SIGNATURE.len();
-
-        // Version
-        let version_len = VERSION
-        .as_bytes()
-        .len();
-
-        let version = &data[head..head + version_len];
-
-        if !zip(VERSION.as_bytes(), version).all(|(a,b)| a == b) {
-            return Err("File and decoder versions do not match, unable to decode.")
-        } 
-
-        head += version_len;
-
-        // Weights
-        let (mut huffman, increment) = Self::decode_table(
-            &data[head..].to_vec()
-        );
-
-        head += increment;
-
-        // File content
-        let mut content = data[head..].to_vec();
-
-        let mut bitstream = DecodeStream::new(content);
-
-        let mut res = String::new();
-        Ok(huffman.decode_body(bitstream, res))
-       
-    }
-
-    fn decode_body(
-        &mut self, 
-        mut decodestream : DecodeStream, 
-        mut out : String
-    ) -> String {
-
-        let mut c : usize;
-        let mut n : usize;
-        let mut w : Weight;
-        let mut e : Encoding;
-        let mut i : Option<usize>;
-
-        'outer : loop {
-            
-            n = 1;
-            e = Encoding::new();
-
-            loop {
-                let _e = decodestream.read(n);
-                e = Encoding::from_u32(_e);
-                match self.table.decodings.get(&e){
-                    None => {n += 1},
-                    Some(c) => {
-                        out.push(*c);
-                        decodestream.discard(n);
-                        if *c == 0 as char {
-                            break 'outer;
-                        }
-                        break
-                    }
-                }
-            }
-        }
-        out.pop();
-        out
-    }
-
-    pub fn encode(&self, data : &mut String) -> Vec<u8> {
+        let huf = Self::train(data);
 
         // File Signature
         let mut buf = Vec::from(SIGNATURE);
@@ -136,7 +58,7 @@ impl Huffman {
         );
 
         // Weights
-        buf.append(&mut self.encode_table() );
+        buf.append(&mut huf.encode_table() );
     
         // Encode File data
         let mut stream = EncodeStream::new(Vec::<u8>::new());
@@ -144,11 +66,11 @@ impl Huffman {
         data.push(END_CHAR);
 
         for c in data.chars() {
-            encoding = self.table.encodings.lookup(&c);
+            encoding = huf.table.encodings.lookup(&c);
             stream.put(&mut encoding.get_raw());
         }
 
-        // Write File Data§
+        // Write File Data
         buf.append(&mut stream.get_data());
 
         buf
@@ -175,9 +97,82 @@ impl Huffman {
         buf
     }
 
-    fn decode_table(data : &Vec<u8>) -> (Self, usize) {
+    pub fn decode(data : &Vec<u8>) -> Result<String, &str> {
 
-        let mut head : usize = 0;
+        // Weights
+        let (mut huffman, mut head) = Self::train_raw(&data)?;
+
+        // File content
+        let mut content = data[head..].to_vec();
+        let mut bitstream = DecodeStream::new(content);
+
+        let mut res = String::new();
+        Ok(huffman.decode_body(bitstream, res))
+       
+    }
+
+    fn decode_body(
+        &mut self, 
+        mut decodestream : DecodeStream, 
+        mut out : String
+    ) -> String {
+
+        let mut c : usize;
+        let mut n : usize;
+        let mut w : Weight;
+        let mut e : Encoding;
+        let mut i : Option<usize>;
+
+        'outer : loop {
+            
+            n = 1;
+            e = Encoding::new();
+
+            loop {
+                e = Encoding::from_u32(decodestream.read(n));
+                let c =  self.table.decodings.get(&e);
+                if c.is_some(){
+                    out.push(*c.unwrap());
+                    decodestream.discard(n);
+                    if *c.unwrap() == 0 as char {
+                        break 'outer;
+                    } 
+                    break;
+                } else {
+                    n += 1;
+                }
+            }
+        }
+        out.pop();
+        out
+    }
+
+    fn train_raw(data : &Vec<u8>) -> Result<(Self, usize), &str> {
+
+        let mut head = 0;
+
+        // File Signature
+        let sig = &data[head..SIGNATURE.len()];
+
+        if !zip(SIGNATURE, sig).all(|(a,b)| a == b) {
+            return Err("Invalid File Signature");
+        } 
+
+        head += SIGNATURE.len();
+
+        // Version
+        let version_len = VERSION
+        .as_bytes()
+        .len();
+
+        let version = &data[head..head + version_len];
+
+        if !zip(VERSION.as_bytes(), version).all(|(a,b)| a == b) {
+            return Err("File and decoder versions do not match, unable to decode.")
+        } 
+
+        head += version_len; 
+
         let mut weights = Lookup::<Weight>::new(0);
         
         const CHAR_WIDTH   : usize = (u16::BITS / 8) as usize;
@@ -211,7 +206,6 @@ impl Huffman {
                 let w = u32::from_le_bytes(weight_array);
                 head += WEIGHT_WIDTH;
 
-
                 // Update weights table
                 weights.set(&c, &w)
 
@@ -232,7 +226,7 @@ impl Huffman {
 
         head += CHAR_WIDTH;
 
-        (Self { table, tree }, head)
+        Ok((Self { table, tree }, head))
 
     }
 }
