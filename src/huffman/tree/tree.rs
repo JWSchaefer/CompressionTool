@@ -23,8 +23,8 @@ impl BinaryTree{
 
         // Count non-zero leaves and initialise
         for c in 0..MAX_CHAR as u32 {
-
-            let c = char::from_u32(c).expect("{c} could not be converted to char");
+            let msg = format!("{c} could not be converted to char");
+            let c = char::from_u32(c).expect(&msg);
 
             match weights.lookup(&c) {
                 0 => {},
@@ -80,7 +80,11 @@ impl BinaryTree{
 
     }
 
-    pub fn _get_encodings(node : &Box<dyn Node>, state : &mut Encoding, encodings : &mut Lookup<Encoding>) {
+    pub fn _get_encodings(
+        node : &Box<dyn Node>, 
+        state : &mut Encoding, 
+        encodings : &mut Lookup<Encoding>
+    ) {
 
         match node.get_char() {
             Some(c) => {

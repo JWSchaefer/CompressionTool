@@ -21,7 +21,6 @@ fn main() {
     let data = fs::read_to_string(args.path).unwrap_or(String::from("None"));
     let tree : Tree = Tree::new(&data);
     
-    
     println!("Elapsed:\t\t{:.2?}", elapsed);
     println!("Elapsed per iter:\t{:.2?}", elapsed / 1_000);
     

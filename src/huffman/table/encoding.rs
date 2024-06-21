@@ -1,5 +1,3 @@
-// pub type Encoding = u32;
-
 pub trait HuffEncoding {
 
     fn new() -> Self;
@@ -18,8 +16,15 @@ pub struct Encoding{
 }
 
 impl Encoding {
-    pub fn from_u32(raw : u32) -> Self{
+    pub fn from_u32(raw : u32) -> Self {
         Self {raw}
+    }
+
+}
+
+impl PartialEq for Encoding {
+    fn eq(&self, other: &Self) -> bool {
+        self.raw == other.raw
     }
 }
 
@@ -28,6 +33,8 @@ impl HuffEncoding for Encoding {
     fn new() -> Self {
         Self {raw : 1}
     }
+
+
 
     fn get_raw(&mut self) -> u32 {
         self.raw

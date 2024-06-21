@@ -6,14 +6,14 @@ use super::super::huffman::constant::SPACER;
 use std::iter::zip;
 pub struct Table{
     pub weights  : Lookup<Weight>,
-    pub encodings : Lookup<Encoding>,
+    pub encodings  : Lookup<Encoding>,
 }
 
 impl Table {
-    pub fn new(weights : Lookup<Weight>, encodings : Lookup<Encoding>) -> Self {
+    pub fn new(weights : Lookup<Weight>, encodings  : Lookup<Encoding>) -> Self {
         Self {
             weights,
-            encodings
+            encodings,
         }
     }
 

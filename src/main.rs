@@ -32,9 +32,9 @@ pub fn check_encode_speed(in_path : &PathBuf, out_path : &PathBuf) -> Result<()>
 
     for _ in 0..its {
 
-        let data    = fs::read_to_string(in_path)?;
+        let mut data    = fs::read_to_string(in_path)?;
         let huf     = Huffman::from_string(&data);
-        let buffer  = huf.encode(&data);
+        let buffer  = huf.encode(&mut data);
 
         fs::write(&out_path, buffer)?;
     }
@@ -51,19 +51,22 @@ pub fn check_encode_speed(in_path : &PathBuf, out_path : &PathBuf) -> Result<()>
 
 fn encode(in_path : &PathBuf, out_path : &PathBuf) -> Result<()> {
 
-    let data    = fs::read_to_string(in_path)?;
-    let huf     = Huffman::from_string(&data);
-    let buffer  = huf.encode(&data);
+    let mut data = fs::read_to_string(in_path)?;
+    let huf      = Huffman::from_string(&data);
+    let buffer   = huf.encode(&mut data);
 
-    fs::write(&out_path, buffer.get_data())?;
-    
+    fs::write(&out_path, buffer)?;
+
     Ok(())
 }
 
 fn decode(in_path : &PathBuf) -> Result<()>{
     let data = fs::read(in_path)?;
-
-    let decoder = Huffman::from_raw(&data);
+    let result = match Huffman::decode(&data) {
+        // Ok(result) =>  fs::write("proof.txt", result),
+        Ok(result) =>  println!("{result}"),
+        Err(message) => panic!("Error Decoding {message}")
+    };
 
     Ok(())
 }
@@ -72,9 +75,12 @@ fn decode(in_path : &PathBuf) -> Result<()>{
 fn main() -> Result<()>{
 
     let args = Cli::parse();
+    println!("Encoding");
     encode(&args.input, &args.output)?;
+    println!("Decoding");
     decode(&args.output)?;
     // check_encode_speed(&args.input, &args.output)?;
-    
+
+
     Ok(())
 }
