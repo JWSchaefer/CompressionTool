@@ -10,7 +10,7 @@ pub trait HuffEncoding {
 
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Hash, Eq)]
 pub struct Encoding{
     raw : u32
 }

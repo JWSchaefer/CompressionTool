@@ -1,14 +1,17 @@
 use crate::huffman::table::encoding;
 
-use super::bitstream::Bitstream;
+
 use super::constant::{END_CHAR, SIGNATURE, SPACER, VERSION};
 
+use super::super::bitstream::decode_stream::DecodeStream;
+use super::super::bitstream::encode_stream::EncodeStream;
 use super::super::table::table::Table;
 use super::super::table::lookup::{Lookup, MAX_CHAR, Indexable};
 use super::super::table::weight::Weight;
 use super::super::tree::tree::BinaryTree;
 use super::super::table::encoding::{Encoding, HuffEncoding};
 
+use std::collections::HashMap;
 use std::iter::zip;
 
 
@@ -33,7 +36,9 @@ impl Huffman {
         
         let encodings = tree.get_encodings();
 
-        let table = Table::new(weights, encodings);
+        let decodings = BinaryTree::get_decodings(&encodings);
+
+        let table = Table::new(weights, encodings, decodings);
 
         Self { table, tree }
     }
@@ -74,8 +79,7 @@ impl Huffman {
         // File content
         let mut content = data[head..].to_vec();
 
-        let mut bitstream = Bitstream::new(content);
-        bitstream.set_head(7);
+        let mut bitstream = DecodeStream::new(content);
 
         let mut res = String::new();
         Ok(huffman.decode_body(bitstream, res))
@@ -84,7 +88,7 @@ impl Huffman {
 
     fn decode_body(
         &mut self, 
-        mut bitstream :  Bitstream, 
+        mut decodestream : DecodeStream, 
         mut out : String
     ) -> String {
 
@@ -99,28 +103,20 @@ impl Huffman {
             n = 1;
             e = Encoding::new();
 
-            if bitstream.len_bits() <= n {
-                break;
-            }
-
             loop {
-                let _e = bitstream.read(n);
+                let _e = decodestream.read(n);
                 e = Encoding::from_u32(_e);
-                match self.table.encodings.search(&e){
+                match self.table.decodings.get(&e){
                     None => {n += 1},
                     Some(c) => {
-                        out.push(char::from_u32(c as u32).unwrap());
-                        bitstream.discard(n);
-                        if c == 0 {
+                        out.push(*c);
+                        decodestream.discard(n);
+                        if *c == 0 as char {
                             break 'outer;
                         }
-                        else {
-                            break;
-                        }
+                        break
                     }
-
                 }
-
             }
         }
         out.pop();
@@ -141,9 +137,9 @@ impl Huffman {
 
         // Weights
         buf.append(&mut self.encode_table() );
-
+    
         // Encode File data
-        let mut stream = Bitstream::new(Vec::<u8>::new());
+        let mut stream = EncodeStream::new(Vec::<u8>::new());
         let mut encoding : Encoding;
         data.push(END_CHAR);
 
@@ -152,7 +148,7 @@ impl Huffman {
             stream.put(&mut encoding.get_raw());
         }
 
-        // Write File Data
+        // Write File Data§
         buf.append(&mut stream.get_data());
 
         buf
@@ -230,7 +226,9 @@ impl Huffman {
 
         let encodings = tree.get_encodings();
 
-        let table = Table::new(weights, encodings);
+        let decodings = BinaryTree::get_decodings(&encodings);
+
+        let table = Table::new(weights, encodings, decodings);
 
         head += CHAR_WIDTH;
 

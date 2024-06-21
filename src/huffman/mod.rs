@@ -13,9 +13,13 @@ mod table {
     pub mod encoding;
 }
 
+mod bitstream {
+    pub mod decode_stream;
+    pub mod encode_stream;
+}
+
 pub mod huffman {
     pub mod huffman;
-    pub mod bitstream;
     pub mod constant;
 }
 

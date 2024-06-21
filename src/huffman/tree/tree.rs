@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use itertools::Itertools;
 
 use super::node::Node;
@@ -66,6 +68,23 @@ impl BinaryTree{
         let root = nodes.pop().unwrap();
 
         Self {root}
+    }
+
+    pub fn get_decodings(
+        encodings : &Lookup<Encoding>
+    ) -> HashMap<Encoding, char>{
+
+        let mut decodings = HashMap::<Encoding, char>::new();
+
+        for _c in 0..MAX_CHAR {
+            let c = char::from_u32(_c as u32).unwrap();
+            let mut e = encodings.lookup(&c);
+            if e.get_raw() != 1 {
+                decodings.insert(e, c);
+            }
+        }
+
+        decodings
     }
 
     pub fn get_encodings(&self) -> Lookup<Encoding> {
