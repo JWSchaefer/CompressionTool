@@ -118,8 +118,8 @@ impl BinaryTree{
                 let mut state0 = state.clone();
                 let mut state1 = state.clone();
 
-                state0.put_left();
-                state1.put_right();
+                state0.branch_left();
+                state1.branch_right();
 
                 Self::_get_encodings(&left, &mut state0, encodings);
                 Self::_get_encodings(&right, &mut state1, encodings);

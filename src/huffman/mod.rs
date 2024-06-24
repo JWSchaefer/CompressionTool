@@ -18,8 +18,10 @@ mod bitstream {
     pub mod encode_stream;
 }
 
-pub mod huffman {
-    pub mod huffman;
+mod file {    
+    pub mod encoder;
+    pub mod decoder;
     pub mod constant;
 }
 
+pub mod huffman;

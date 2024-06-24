@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
 cargo run --release --quiet -- -i external/les_mis.txt -o .test.huff
-cargo run --release --quiet -- -i external/test.rs -o .test.huff
 
 rm .test.huff

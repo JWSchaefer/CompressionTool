@@ -1,16 +1,15 @@
 // #![allow(warnings)] 
-#![allow(unused)]
+// #![allow(unused)]
 
 mod huffman;
 
 use std::fs;
 use std::io::Result;
-use std::time::Instant;
 use std::path::PathBuf;
 
 use clap::Parser;
 
-use crate::huffman::huffman::huffman::Huffman;
+use crate::huffman::huffman::Huffman;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -24,34 +23,20 @@ struct Cli {
         output : PathBuf,
 }
 
-fn encode(in_path : &PathBuf, out_path : &PathBuf) -> Result<()> {
-
-    let mut data = fs::read_to_string(in_path)?;
-    let buffer   = Huffman::encode(&mut data);
-
-    fs::write(&out_path, buffer)?;
-
-    Ok(())
-}
-
-fn decode(in_path : &PathBuf) -> Result<()>{
-    let data = fs::read(in_path)?;
-    let result = match Huffman::decode(&data) {
-        Ok(result) =>  {},
-        Err(message) => panic!("Error Decoding {message}")
-    };
-
-    Ok(())
-}
-
 
 fn main() -> Result<()>{
 
     let args = Cli::parse();
+
     println!("Encoding");
-    encode(&args.input, &args.output)?;
+    let mut data = fs::read_to_string(&args.input)?;
+    let encoding = Huffman::encode(&mut data);
+    fs::write(&args.output, &encoding)?;
+
     println!("Decoding");
-    decode(&args.output)?;
-    
+    let mut data = fs::read(&args.output)?;
+    let result = Huffman::decode(&mut data);
+    fs::write("Proof.txt", &result)?;
+
     Ok(())
 }
