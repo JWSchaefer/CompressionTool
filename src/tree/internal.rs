@@ -1,5 +1,5 @@
 use super::node::Node;
-use super::super::table::weight::Weight;
+use crate::table::weight::Weight;
 
 pub struct Internal {
     left  : Box<dyn Node>,

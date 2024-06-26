@@ -1,9 +1,6 @@
-
-
-use crate::huffman::table::weight::Weight;
-
 use super::constant::{SIGNATURE, VERSION, SPACER, END_CHAR};
 
+use super::super::table::weight::Weight;
 use super::super::table::lookup::{Lookup, MAX_CHAR};
 use super::super::table::encoding::{HuffEncoding, Encoding};
 use super::super::bitstream::encode_stream::EncodeStream;

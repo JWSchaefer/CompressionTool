@@ -18,6 +18,8 @@ pub struct BinaryTree{
 
 impl BinaryTree{
 
+    
+
     pub fn new(weights : &Lookup<Weight>) -> Self {
 
         // Create node vector
@@ -68,6 +70,10 @@ impl BinaryTree{
         let root = nodes.pop().unwrap();
 
         Self {root}
+    }
+
+    pub fn serialise(&self) -> String {
+        "Hi".to_string()
     }
 
     pub fn get_decodings(

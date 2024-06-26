@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-cargo run --release --quiet -- -i external/les_mis.txt -o .test.huff
-
-rm .test.huff

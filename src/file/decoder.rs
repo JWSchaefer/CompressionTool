@@ -1,12 +1,12 @@
-use super::constant::{VERSION, SIGNATURE, SPACER, END_CHAR};
+use std::iter::zip;
+use std::collections::HashMap;
 
+use super::constant::{VERSION, SIGNATURE, SPACER, END_CHAR};
 use super::super::table::lookup::Lookup;
 use super::super::table::weight::Weight;
 use super::super::table::encoding::Encoding;
 use super::super::bitstream::decode_stream::DecodeStream;
 
-use std::iter::zip;
-use std::collections::HashMap;
 
 pub struct Decoder {
     data : Vec<u8>

@@ -37,10 +37,6 @@ where
     T: Copy + PartialEq,
 {
 
-    pub fn iter_mut(&mut self) -> std::slice::IterMut<'_, T>{
-        self.data.iter_mut()
-    }
-
     pub fn new(fill: T) -> Self {
         Lookup {
             data: [fill; MAX_CHAR],
@@ -60,19 +56,6 @@ where
         I: Indexable + Copy,
     {
         self.data[(*index).to_usize()] = *value;
-    }
-
-    pub fn search(&self, value: &T) -> Option<usize> {
-
-        for (i, v) in self.data.iter().enumerate() {
-            if v == value {
-                return Some(i);
-            } else {
-                continue;
-            }
-        }
-
-        None
     }
 
 }

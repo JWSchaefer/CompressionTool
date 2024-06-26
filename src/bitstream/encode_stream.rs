@@ -1,5 +1,3 @@
-use std::result;
-use colored::Colorize;
 pub struct EncodeStream {
     data : Vec::<u8>,
     head : usize,
@@ -14,23 +12,6 @@ impl EncodeStream {
 
     pub fn get_data(&mut self) -> &mut Vec<u8> {
         &mut self.data
-    }
-
-    pub fn get_head(&self) -> usize {
-        self.head
-    }
-
-    pub fn set_head(&mut self, head : usize) {
-        self.head = head
-    }
-
-   
-    pub fn len(&self) -> usize {
-        self.data.len()
-    }
-
-    pub fn len_bits(&self) -> usize {
-        (self.data.len() - 1) * 8 + self.head
     }
 
    
