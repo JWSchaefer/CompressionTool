@@ -1,4 +1,4 @@
-pub const MAX_CHAR : usize = 20_000 as usize;
+pub const MAX_CHAR: usize = 20_000 as usize;
 
 pub trait Indexable {
     fn to_usize(self) -> usize;
@@ -6,7 +6,7 @@ pub trait Indexable {
 
 impl Indexable for usize {
     fn to_usize(self) -> usize {
-        self 
+        self
     }
 }
 
@@ -29,14 +29,13 @@ impl Indexable for u32 {
 }
 
 pub struct Lookup<T> {
-    data : [T; MAX_CHAR]
+    data: [T; MAX_CHAR],
 }
 
 impl<T> Lookup<T>
 where
     T: Copy + PartialEq,
 {
-
     pub fn new(fill: T) -> Self {
         Lookup {
             data: [fill; MAX_CHAR],
@@ -50,12 +49,10 @@ where
         self.data[(*index).to_usize()]
     }
 
-
     pub fn set<I>(&mut self, index: &I, value: &T)
     where
         I: Indexable + Copy,
     {
         self.data[(*index).to_usize()] = *value;
     }
-
 }

@@ -1,21 +1,19 @@
-use super::node::Node;
 use super::super::table::weight::Weight;
+use super::node::Node;
 
-pub struct Leaf 
-{
-    char   : char,
-    weight : Weight
+pub struct Leaf {
+    char: char,
+    weight: Weight,
 }
 
 impl Leaf {
-    pub fn new(char : char, weight : Weight) -> Self {
-        Self { char , weight }
+    pub fn new(char: char, weight: Weight) -> Self {
+        Self { char, weight }
     }
 }
 
 impl Node for Leaf {
-
-    fn get_char(&self)     -> Option::<char> {
+    fn get_char(&self) -> Option<char> {
         Some(self.char)
     }
 
@@ -23,7 +21,7 @@ impl Node for Leaf {
         return None;
     }
 
-    fn get_weight(&self ) -> Weight{
+    fn get_weight(&self) -> Weight {
         return self.weight;
     }
 }

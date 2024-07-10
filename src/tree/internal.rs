@@ -2,19 +2,18 @@ use super::node::Node;
 use crate::table::weight::Weight;
 
 pub struct Internal {
-    left  : Box<dyn Node>,
-    right : Box<dyn Node>
+    left: Box<dyn Node>,
+    right: Box<dyn Node>,
 }
 
 impl Internal {
-    pub fn new(left : Box<dyn Node>, right : Box<dyn Node>) -> Self {
-        Self {left, right}
-    } 
+    pub fn new(left: Box<dyn Node>, right: Box<dyn Node>) -> Self {
+        Self { left, right }
+    }
 }
 
 impl Node for Internal {
-
-    fn get_char(&self) -> Option::<char> {
+    fn get_char(&self) -> Option<char> {
         None
     }
 
@@ -25,4 +24,4 @@ impl Node for Internal {
     fn get_weight(&self) -> Weight {
         self.left.get_weight() + self.right.get_weight()
     }
-} 
+}

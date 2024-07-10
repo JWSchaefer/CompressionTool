@@ -1,1 +1,1 @@
-pub type Weight = u32; 
+pub type Weight = u32;
