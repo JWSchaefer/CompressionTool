@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::iter::zip;
 
 use super::super::bitstream::decode_stream::DecodeStream;
-use super::super::table::encoding::Encoding;
+use super::super::table::code::Code;
 use super::super::table::lookup::Lookup;
 use super::super::table::weight::Weight;
 use super::constant::{END_CHAR, SIGNATURE, SPACER, VERSION};
@@ -61,17 +61,23 @@ impl Decoder {
                 .all(|(a, b)| a == b)
             {
                 // Convert slice to array for u16
-                let char_array: [u8; 2] = match self.data[head..head + CHAR_WIDTH].try_into() {
-                    Ok(array) => array,
-                    Err(_) => return Err("Failed to read a char from the table.".to_string()),
-                };
+                let char_array: [u8; 2] =
+                    match self.data[head..head + CHAR_WIDTH].try_into() {
+                        Ok(array) => array,
+                        Err(_) => {
+                            return Err("Failed to read a char from the table."
+                                .to_string())
+                        }
+                    };
 
                 // Convert to uint
-                let c = char::from_u32(u16::from_le_bytes(char_array) as u32).unwrap();
+                let c = char::from_u32(u16::from_le_bytes(char_array) as u32)
+                    .unwrap();
                 head += CHAR_WIDTH;
 
                 // Convert slice to array for u32
-                let weight_array: [u8; 4] = self.data[head..head + WEIGHT_WIDTH]
+                let weight_array: [u8; 4] = self.data
+                    [head..head + WEIGHT_WIDTH]
                     .try_into()
                     .expect("Failed to read weight from table.");
 
@@ -95,7 +101,7 @@ impl Decoder {
 
     pub fn read_body(
         self,
-        decodings: &HashMap<Encoding, char>,
+        decodings: &HashMap<Code, char>,
         head: usize,
     ) -> Result<String, String> {
         // File content
@@ -107,18 +113,18 @@ impl Decoder {
 
     pub fn decode_body(
         self,
-        decodings: &HashMap<Encoding, char>,
+        decodings: &HashMap<Code, char>,
         decodestream: &mut DecodeStream,
     ) -> Result<String, String> {
         let mut n: usize;
-        let mut e: Encoding;
+        let mut e: Code;
         let mut out = String::new();
 
         'outer: loop {
             n = 1;
 
             loop {
-                e = Encoding::from_u32(decodestream.read(n)?);
+                e = Code::from_u32(decodestream.read(n)?);
                 let c = decodings.get(&e);
                 if c.is_some() {
                     out.push(*c.unwrap());

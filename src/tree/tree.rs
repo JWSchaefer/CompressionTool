@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
-use super::super::table::encoding::{Encoding, HuffEncoding};
+use super::super::table::code::{Code, HuffCode};
 use super::super::table::lookup::Lookup;
 use super::super::table::weight::Weight;
 use super::internal::Internal;
@@ -23,8 +23,16 @@ impl BinaryTree {
 
         // Count non-zero leaves and initialise
         for c in 0..MAX_CHAR as u32 {
+
+            // Skip invalid chars
+            if (0xD800..=0xDFFF).contains(&c  ) {
+                continue;
+            }
+
             let msg = format!("{c} could not be converted to char");
             let c = char::from_u32(c).expect(&msg);
+
+            
 
             match weights.lookup(&c) {
                 0 => {}
@@ -67,10 +75,15 @@ impl BinaryTree {
         "Hi".to_string()
     }
 
-    pub fn get_decodings(encodings: &Lookup<Encoding>) -> HashMap<Encoding, char> {
-        let mut decodings = HashMap::<Encoding, char>::new();
+    pub fn get_decodings(encodings: &Lookup<Code>) -> HashMap<Code, char> {
+        let mut decodings = HashMap::<Code, char>::new();
 
         for _c in 0..MAX_CHAR {
+            // Skip invalid chars
+            if (0xD800..=0xDFFF).contains(&_c) {
+                continue;
+            }
+
             let c = char::from_u32(_c as u32).unwrap();
             let mut e = encodings.lookup(&c);
             if e.get_raw() != 1 {
@@ -81,21 +94,17 @@ impl BinaryTree {
         decodings
     }
 
-    pub fn get_encodings(&self) -> Lookup<Encoding> {
-        let mut encodings = Lookup::<Encoding>::new(Encoding::new());
+    pub fn get_encodings(&self) -> Lookup<Code> {
+        let mut encodings = Lookup::<Code>::new(Code::new());
 
-        let mut state = Encoding::new();
+        let mut state = Code::new();
 
         Self::_get_encodings(&self.root, &mut state, &mut encodings);
 
         encodings
     }
 
-    pub fn _get_encodings(
-        node: &Box<dyn Node>,
-        state: &mut Encoding,
-        encodings: &mut Lookup<Encoding>,
-    ) {
+    pub fn _get_encodings(node: &Box<dyn Node>, state: &mut Code, encodings: &mut Lookup<Code>) {
         match node.get_char() {
             Some(c) => {
                 encodings.set(&c, &state);

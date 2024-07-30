@@ -21,11 +21,13 @@ impl DecodeStream {
         // let len = self.data.len() - 1;
 
         if bytes > 4 {
-            return Err("Attempting to read more than 4 bytes from the stream".to_string());
+            return Err("Attempting to read more than 4 bytes from the stream"
+                .to_string());
         }
 
         let mut result_array: [u8; 4] = [0; 4];
-        result_array[0..bytes].copy_from_slice(&self.data[self.byt_head..self.byt_head + bytes]);
+        result_array[0..bytes]
+            .copy_from_slice(&self.data[self.byt_head..self.byt_head + bytes]);
 
         let mut result = u32::from_be_bytes(result_array);
 

@@ -28,7 +28,7 @@ impl EncodeStream {
         // Raise an error if shifting the bit would cause an overflow
         // This is fixable but is not woth the effort right now
         if diff > front {
-            panic!("Encoding cannot be coerced into the stream without information loss")
+            panic!("Code cannot be coerced into the stream without information loss")
         }
 
         // Clear the lead bit and shift

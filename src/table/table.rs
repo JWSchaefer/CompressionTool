@@ -1,19 +1,19 @@
-use super::encoding::Encoding;
+use super::code::Code;
 use super::lookup::Lookup;
 use super::weight::Weight;
 
 use std::collections::HashMap;
 pub struct Table {
     pub weights: Lookup<Weight>,
-    pub encodings: Lookup<Encoding>,
-    pub decodings: HashMap<Encoding, char>,
+    pub encodings: Lookup<Code>,
+    pub decodings: HashMap<Code, char>,
 }
 
 impl Table {
     pub fn new(
         weights: Lookup<Weight>,
-        encodings: Lookup<Encoding>,
-        decodings: HashMap<Encoding, char>,
+        encodings: Lookup<Code>,
+        decodings: HashMap<Code, char>,
     ) -> Self {
         Self {
             weights,

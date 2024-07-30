@@ -1,7 +1,7 @@
 use super::constant::{END_CHAR, SIGNATURE, SPACER, VERSION};
 
 use super::super::bitstream::encode_stream::EncodeStream;
-use super::super::table::encoding::{Encoding, HuffEncoding};
+use super::super::table::code::{Code, HuffCode};
 use super::super::table::lookup::{Lookup, MAX_CHAR};
 use super::super::table::weight::Weight;
 pub struct Encoder {
@@ -46,8 +46,12 @@ impl Encoder {
         self.data.append(&mut Vec::from([SPACER; 2]));
     }
 
-    pub fn write_string(&mut self, encodings: &Lookup<Encoding>, data: &mut String) {
-        let mut encoding: Encoding;
+    pub fn write_string(
+        &mut self,
+        encodings: &Lookup<Code>,
+        data: &mut String,
+    ) {
+        let mut encoding: Code;
         let mut stream = EncodeStream::new(Vec::<u8>::new());
 
         data.push(END_CHAR);
