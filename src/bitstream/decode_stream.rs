@@ -41,13 +41,18 @@ impl DecodeStream {
     pub fn discard(&mut self, n_bits: usize) {
         let bits = (7 - self.bit_head) + n_bits;
 
-        let bytes = (bits / 8) - 1 + (bits % 8 != 0) as usize;
+        let mut bytes = bits / 8;
+
+        if bits % 8 == 0 {
+            bytes -= 1;
+        }
 
         self.bit_head = 7 - (bits % 8);
-
         self.byt_head += bytes;
 
-        self.data[self.byt_head] &= !(u8::MAX << self.bit_head + 1);
+        let mask = u8::MAX << 1;
+
+        self.data[self.byt_head] &= !(mask << self.bit_head);
 
         if self.bit_head == 7 {
             self.byt_head += 1;
