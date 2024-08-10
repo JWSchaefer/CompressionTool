@@ -1,10 +1,11 @@
-use crate::file::constant::END_CHAR;
-use crate::file::decoder::Decoder;
-use crate::file::encoder::Encoder;
-use crate::table::lookup::Lookup;
-use crate::table::table::Table;
-use crate::table::weight::Weight;
-use crate::tree::tree::BinaryTree;
+use crate::core::code::Code;
+use crate::core::constant::END_CHAR;
+use crate::core::decoder::Decoder;
+use crate::core::encoder::Encoder;
+use crate::core::lookup::Lookup;
+use crate::core::table::Table;
+use crate::core::tree::tree::BinaryTree;
+use crate::core::weight::Weight;
 
 pub struct Huffman {
     table: Table,
@@ -21,7 +22,7 @@ impl Huffman {
         Self { table, tree }
     }
 
-    fn gen_weights(data: &String) -> Lookup<Weight> {
+    fn learn_weights(data: &String) -> Lookup<Weight> {
         let mut weights = Lookup::<Weight>::new(0);
 
         for c in data.chars() {
@@ -34,15 +35,14 @@ impl Huffman {
     }
 
     pub fn train(data: String) -> Self {
-        let weights = Self::gen_weights(&data);
-
+        let weights = Self::learn_weights(&data);
         Self::from_weights(weights)
     }
 
-    pub fn encode(mut data: String) -> Result<Vec<u8>, String> {
+    pub fn encode(data: &String) -> Result<Vec<u8>, String> {
         Encoder::check_length(&data)?;
 
-        let weights = Self::gen_weights(&data);
+        let weights = Self::learn_weights(&data);
         let huffman = Self::from_weights(weights);
 
         let mut encoder = Encoder::new();
@@ -50,7 +50,7 @@ impl Huffman {
         encoder.write_signature();
         encoder.write_version();
         encoder.write_weights(&huffman.table.weights);
-        encoder.write_string(&huffman.table.encodings, &mut data);
+        encoder.write_string(&huffman.table.encodings, data);
 
         Ok(encoder.data)
     }
@@ -63,7 +63,11 @@ impl Huffman {
         decoder.read_body(&huffman.table.decodings, head)
     }
 
-    pub fn get_tree(&self) -> String {
+    pub fn get_tree(&self) -> Result<String, String> {
         self.tree.serialise()
+    }
+
+    pub fn get_table(&self) -> Result<Vec<(char, Weight, Code)>, String> {
+        self.table.to_vec()
     }
 }

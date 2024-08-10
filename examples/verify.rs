@@ -51,7 +51,7 @@ fn main() {
         };
 
         // Encode and decode the content
-        let encoding = Huffman::encode(source.clone())
+        let encoding = Huffman::encode(&source)
             .expect("Failed to encode the source file.");
 
         let result = Huffman::decode(encoding.clone())
@@ -88,7 +88,7 @@ fn main() {
     }
 
     // Final results
-    if errors.len() == 1 && errors[0] == "This Should Fail" {
+    if errors.len() == 0 {
         println!("\n\n🎉 Checks completed with no erros.");
     } else {
         println!("\n\n⚠️ Checks completed with errors.");

@@ -1,4 +1,4 @@
-use super::super::table::weight::Weight;
+use super::super::weight::Weight;
 use super::node::Node;
 
 pub struct Leaf {

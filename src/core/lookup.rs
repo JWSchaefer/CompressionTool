@@ -1,4 +1,4 @@
-pub const MAX_CHAR: usize = u16::MAX as usize;
+use super::constant::MAX_CHAR;
 
 pub trait Indexable {
     fn to_usize(self) -> usize;

@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 use std::iter::zip;
 
-use super::super::bitstream::decode_stream::DecodeStream;
-use super::super::table::code::Code;
-use super::super::table::lookup::Lookup;
-use super::super::table::weight::Weight;
+use super::code::Code;
+use super::lookup::Lookup;
+use super::weight::Weight;
+
+use super::bitstream::decode_stream::DecodeStream;
 use super::constant::{END_CHAR, SIGNATURE, SPACER, VERSION};
 
 pub struct Decoder {

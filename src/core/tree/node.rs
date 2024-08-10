@@ -1,4 +1,4 @@
-use super::super::table::weight::Weight;
+use super::super::weight::Weight;
 
 pub trait Node {
     fn get_char(&self) -> Option<char>;
