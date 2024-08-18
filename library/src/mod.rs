@@ -14,7 +14,12 @@ mod core {
         pub mod encode_stream;
     }
 
-    pub mod code;
+    pub mod code {
+        pub mod code;
+        pub mod simple_code;
+        pub mod small_code;
+    }
+
     pub mod constant;
     pub mod lookup;
     pub mod table;

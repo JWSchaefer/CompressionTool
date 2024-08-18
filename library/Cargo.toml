@@ -1,5 +1,5 @@
 [package]
-name = "compression"
+name = "compression_tool"
 version = "0.1.0"
 edition = "2021"
 

@@ -1,3 +1,5 @@
+use super::super::code::code::Code;
+
 pub struct EncodeStream {
     data: Vec<u8>,
     head: usize,
@@ -16,30 +18,40 @@ impl EncodeStream {
         &mut self.data
     }
 
-    pub fn put(&mut self, encoding: &mut u32) {
+    pub fn put<T>(&mut self, encoding: &mut T) -> Result<(), String>
+    where
+        T: Code,
+    {
         // Determine how far to shift the encoding
-        let front: u32 = encoding.leading_zeros() + 1;
-        let bits: u32 = 32 - front;
-        let diff: u32 = (((32 + self.head + 1) as u32) - bits) % 8;
+        let bits: usize = encoding.relevant_bits()?;
+        let diff: usize = ((32 + self.head + 1) - bits) % 8;
 
-        let size = (bits + diff) as usize;
-        let bytes_to_write = (size / 8) + (size % 8 != 0) as usize;
+        let size: usize = bits + diff;
+
+        let mut bytes_to_write: usize = size / 8;
+
+        if size % 8 != 0 {
+            bytes_to_write += 1;
+        }
 
         // Raise an error if shifting the bit would cause an overflow
         // This is fixable but is not woth the effort right now
-        if diff > front {
+        if diff > encoding.irrelevant_bits()? {
             panic!("Code cannot be coerced into the stream without information loss")
         }
 
+        let mut raw: u32 = encoding.get_raw();
+
         // Clear the lead bit and shift
-        *encoding &= !(0b1 << bits);
-        *encoding <<= diff;
+        raw &= !(0b1 << bits);
+        raw <<= diff;
 
         // Split the encoding into u8 bytes
-        let bytes = &encoding.to_be_bytes()[4 - bytes_to_write..];
+        let bytes: &[u8] = &raw.to_be_bytes()[4 - bytes_to_write..];
 
         // Join the two mismatched bytes
-        let len = self.data.len() - 1;
+        let len: usize = self.data.len() - 1;
+
         self.data[len] |= bytes[0];
 
         if bytes_to_write > 1 {
@@ -53,5 +65,7 @@ impl EncodeStream {
                 self.data.push(0)
             }
         }
+
+        Ok(())
     }
 }

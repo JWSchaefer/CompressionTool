@@ -2,7 +2,7 @@ use prettytable::*;
 use prettytable::{Cell, Row, Table};
 use std::fs;
 
-use compression::huffman::Huffman;
+use compression_tool::huffman::Huffman;
 
 fn char_repr(c: char) -> String {
     match c {
@@ -12,8 +12,7 @@ fn char_repr(c: char) -> String {
         '\\' => "\\\\".to_string(), // Represent backslash
         '\'' => "\\'".to_string(),  // Represent single quote
         '"' => "\\\"".to_string(),  // Represent double quote
-        _ if c.is_ascii_graphic() => c.to_string(), // Regular printable characters
-        _ => format!("\\u{{{:04X}}}", c as u32),    // Unicode characters
+        c => c.to_string(), // _ => format!("\\u{{{:04X}}}", c as u32),    // Unicode characters
     }
 }
 
@@ -29,7 +28,7 @@ fn main() {
     let original =
         fs::read_to_string(path.to_string()).expect("Could not read the file");
 
-    let encoder = Huffman::train(original.clone());
+    let encoder = Huffman::train(&original);
 
     let encoder_table = encoder.get_table().expect("Failed to extract table");
 
@@ -37,7 +36,7 @@ fn main() {
         table.add_row(Row::new(vec![
             Cell::new(&format!("{}", char_repr(c))),
             Cell::new(&format!("{}", weight)),
-            Cell::new(&format!("{:>31}", code.get_string())),
+            Cell::new(&format!("{:>31}", code)),
         ]));
     }
 

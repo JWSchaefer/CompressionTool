@@ -1,4 +1,4 @@
-use compression::huffman::Huffman;
+use compression_tool::huffman::Huffman;
 use console::style;
 use indicatif::{ProgressBar, ProgressState, ProgressStyle};
 use std::fmt::Write;

@@ -6,7 +6,7 @@ use super::internal::Internal;
 use super::leaf::Leaf;
 use super::node::Node;
 
-use super::super::code::Code;
+use super::super::code::{code::Code, small_code::SmallCode};
 use super::super::constant::MAX_CHAR;
 use super::super::lookup::Lookup;
 use super::super::weight::Weight;
@@ -75,8 +75,10 @@ impl BinaryTree {
         Err("Not implemented.".to_string())
     }
 
-    pub fn get_decodings(encodings: &Lookup<Code>) -> HashMap<Code, char> {
-        let mut decodings = HashMap::<Code, char>::new();
+    pub fn get_decodings(
+        encodings: &Lookup<SmallCode>,
+    ) -> HashMap<SmallCode, char> {
+        let mut decodings = HashMap::<SmallCode, char>::new();
 
         for _c in 0..MAX_CHAR {
             // Skip invalid chars
@@ -94,10 +96,10 @@ impl BinaryTree {
         decodings
     }
 
-    pub fn get_encodings(&self) -> Lookup<Code> {
-        let mut encodings = Lookup::<Code>::new(Code::new());
+    pub fn get_encodings(&self) -> Lookup<SmallCode> {
+        let mut encodings = Lookup::<SmallCode>::new(SmallCode::new());
 
-        let mut state = Code::new();
+        let mut state = SmallCode::new();
 
         Self::_get_encodings(&self.root, &mut state, &mut encodings);
 
@@ -106,8 +108,8 @@ impl BinaryTree {
 
     pub fn _get_encodings(
         node: &Box<dyn Node>,
-        state: &mut Code,
-        encodings: &mut Lookup<Code>,
+        state: &mut SmallCode,
+        encodings: &mut Lookup<SmallCode>,
     ) {
         match node.get_char() {
             Some(c) => {

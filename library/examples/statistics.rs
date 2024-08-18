@@ -5,7 +5,7 @@ use std::time::Instant;
 use prettytable::{Cell, Row, Table};
 use unbytify::bytify;
 
-use compression::huffman::Huffman;
+use compression_tool::huffman::Huffman;
 
 fn main() {
     let path = "examples/resources/Les Misérables.txt";

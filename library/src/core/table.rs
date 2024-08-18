@@ -1,4 +1,4 @@
-use super::code::Code;
+use super::code::small_code::SmallCode;
 use super::lookup::Lookup;
 use super::weight::Weight;
 
@@ -8,15 +8,15 @@ use std::char;
 use std::collections::HashMap;
 pub struct Table {
     pub weights: Lookup<Weight>,
-    pub encodings: Lookup<Code>,
-    pub decodings: HashMap<Code, char>,
+    pub encodings: Lookup<SmallCode>,
+    pub decodings: HashMap<SmallCode, char>,
 }
 
 impl Table {
     pub fn new(
         weights: Lookup<Weight>,
-        encodings: Lookup<Code>,
-        decodings: HashMap<Code, char>,
+        encodings: Lookup<SmallCode>,
+        decodings: HashMap<SmallCode, char>,
     ) -> Self {
         Self {
             weights,
@@ -25,8 +25,8 @@ impl Table {
         }
     }
 
-    pub fn to_vec(&self) -> Result<Vec<(char, Weight, Code)>, String> {
-        let mut output = Vec::<(char, Weight, Code)>::new();
+    pub fn to_vec(&self) -> Result<Vec<(char, Weight, SmallCode)>, String> {
+        let mut output = Vec::<(char, Weight, SmallCode)>::new();
 
         for c in 0..MAX_CHAR as u32 {
             // Skip invalid chars

@@ -1,7 +1,7 @@
 use super::constant::{END_CHAR, MAX_CHAR, SIGNATURE, SPACER, VERSION};
 
 use super::bitstream::encode_stream::EncodeStream;
-use super::code::Code;
+use super::code::small_code::SmallCode;
 use super::lookup::Lookup;
 use super::weight::Weight;
 pub struct Encoder {
@@ -15,11 +15,15 @@ impl Encoder {
         }
     }
 
-    pub fn check_length(data: &String) -> Result<(), String> {
-        match data.len() == 0 {
-            true => Err("File is empty!".to_string()),
-            false => Ok(()),
+    pub fn check(data: &String) -> Option<String> {
+        if !Encoder::check_length(&data) {
+            return Some("Cannot encode an empty file.".to_string());
         }
+        None
+    }
+
+    pub fn check_length(data: &String) -> bool {
+        data.len() != 0
     }
 
     pub fn write_signature(&mut self) {
@@ -46,17 +50,23 @@ impl Encoder {
         self.data.append(&mut Vec::from([SPACER; 2]));
     }
 
-    pub fn write_string(&mut self, encodings: &Lookup<Code>, data: &String) {
-        let mut encoding: Code;
+    pub fn write_string(
+        &mut self,
+        encodings: &Lookup<SmallCode>,
+        data: &String,
+    ) -> Result<(), String> {
+        let mut encoding: SmallCode;
         let mut stream = EncodeStream::new(Vec::<u8>::new());
 
         for c in data.chars() {
             encoding = encodings.lookup(&c);
-            stream.put(&mut encoding.get_raw());
+            stream.put(&mut encoding)?;
         }
 
-        stream.put(&mut encodings.lookup(&END_CHAR).get_raw());
+        stream.put(&mut encodings.lookup(&END_CHAR))?;
 
         self.data.append(&mut stream.get_data());
+
+        Ok(())
     }
 }
