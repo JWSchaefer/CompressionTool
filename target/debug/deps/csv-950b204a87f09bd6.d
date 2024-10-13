@@ -1,0 +1,15 @@
+/Users/joe/Repos/CompressionTool/target/debug/deps/libcsv-950b204a87f09bd6.rmeta: /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/lib.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/byte_record.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/cookbook.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/debug.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/deserializer.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/error.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/reader.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/serializer.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/string_record.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/tutorial.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/writer.rs
+
+/Users/joe/Repos/CompressionTool/target/debug/deps/csv-950b204a87f09bd6.d: /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/lib.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/byte_record.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/cookbook.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/debug.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/deserializer.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/error.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/reader.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/serializer.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/string_record.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/tutorial.rs /Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/writer.rs
+
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/lib.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/byte_record.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/cookbook.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/debug.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/deserializer.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/error.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/reader.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/serializer.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/string_record.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/tutorial.rs:
+/Users/joe/.cargo/registry/src/index.crates.io-6f17d22bba15001f/csv-1.3.0/src/writer.rs:

@@ -1,5 +1,4 @@
 pub mod huffman;
-
 mod core {
 
     pub mod tree {

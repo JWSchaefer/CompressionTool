@@ -1,0 +1,3 @@
+[workspace]
+members = [ "interface", "library"]
+resolver = "1"
